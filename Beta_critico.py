@@ -7,7 +7,11 @@ Tn = []
 vald = []
 valv = []
 for i in range(100):
+<<<<<<< HEAD
     Sim, val1, val2 = Sm.Main(100, 10000, 2.5, False)
+=======
+    Sim, val1, val2 = Sm.Main(100, 10000000, 2, False-------------------------------------------------, 1000)
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
     vald += [val1]
     valv += [val2]
     Tn += [Sim]

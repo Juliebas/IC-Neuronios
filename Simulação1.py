@@ -10,6 +10,7 @@ import pandas as pd
 
 def Disparos(N, n):
     '''
+<<<<<<< HEAD
     g: float | parâmetro da exponencial
     N: int | número de neurônios
     n: int | número de vazamentos
@@ -18,6 +19,15 @@ def Disparos(N, n):
     '''
     t = np.random.exponential(scale=1, size = (N, n))
     t_cumsum = np.cumsum(t, axis=1)
+=======
+    N: int | número de neurônios
+    n: int | número de disparos
+
+    returna uma lista exponencial
+    '''
+    t = np.random.exponential(scale = 1/N, size = n)
+    t_cumsum = np.cumsum(t)
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
 
     return t_cumsum
 
@@ -27,10 +37,17 @@ def Vazamentos(g, N, n):
     N: int | número de neurônios
     n: int | número de vazamentos
 
+<<<<<<< HEAD
     retorna uma matriz com os vazamentos de cada neurônio
     '''
     t = np.random.exponential(scale=g, size = (N, n))
     t_cumsum= np.cumsum(t, axis =1)
+=======
+    returna umas lista exponencial
+    '''
+    t = np.random.exponential(scale=g/N, size = n)
+    t_cumsum= np.cumsum(t)
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
     
     return t_cumsum
 
@@ -60,7 +77,11 @@ def Zera(S, i):
     S[i] = 0
     return S
 
+<<<<<<< HEAD
 def Pega_min(S, N, ld, lv, d, v):
+=======
+def Pega_min(S, N, d, v):
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
     '''
     S: array | array de Status dos neurônios (ativos = 1, inativos = 0)
     N: int | número de neurônios
@@ -70,6 +91,7 @@ def Pega_min(S, N, ld, lv, d, v):
     v: np.array | matriz com o tempo dos vazamentos
     
     '''
+<<<<<<< HEAD
     #Criando uma lista com os próximos disparos e vazamentos
     listad = d[np.arange(N), ld] 
     listav = v[np.arange(N), lv]
@@ -95,29 +117,66 @@ def Pega_min(S, N, ld, lv, d, v):
     
 
 def Main(N, n, g, plot = False):
+=======
+
+    #Pegando o mínimo dessa lista
+    mind = d[0]
+    minv = v[0]
+
+    i = np.random.choice(range(N))
+
+    if  mind <= minv: #Caso o mínimo seja disparo
+        if S[i] == 1: #Caso o neurônio esteja ativo
+            S = Passa_vizinhos(S, i)
+        d = d[1:]
+    else: #Caso o mínimo seja vazamento
+        if S[i] == 1: #Caso esteja ativo
+            S = Zera(S, i)
+        v = v[1:]
+    
+    return S, d, v
+    
+
+def Main(N, n, g, plot = False, int_graph = 1000):
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
     '''
     N: int | número de neurônios utilizados
     n: int | número do tamanho da matriz
     g: float | valor da expornencial
     plot: bool | se pretende ver o gráfico da função
+<<<<<<< HEAD
+=======
+    int_graph
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
     '''
     S = [1]*N
     d = Disparos(N, n)
     v = Vazamentos(g, N, n)
     n_ativos =[sum(S)]
     x = range(len(n_ativos))
+<<<<<<< HEAD
     ld = [0]*N
     lv = [0]*N
+=======
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
     t = 0
 
     plt.ion()
     
     while sum(S) > 0:
+<<<<<<< HEAD
         S, ld, lv = Pega_min(S, N, ld, lv, d, v) #Pega o tempo mais recente na matriz
         n_ativos.append(sum(S))
         t += 1
         
         if plot and t%200 == 0: # Parte voltada pro gráfico
+=======
+        S, d, v = Pega_min(S, N, d, v) #Pega o tempo mais recente na matriz
+        n_ativos.append(sum(S))
+        t += 1
+        
+        if plot and t%int_graph == 0: # Parte voltada pro gráfico
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
             plt.clf()
             x = range(len(n_ativos))
             print(t, (sum(S)))
@@ -131,10 +190,17 @@ def Main(N, n, g, plot = False):
 
             plt.ylim(0, N+1)
             plt.pause(0.0001)
+<<<<<<< HEAD
     print("Resultado válido?", not np.max(ld) == n)
     print("Resultado válido?", not np.max(lv) == n)
     
     return t, not np.max(ld) == n, not np.max(lv) == n
+=======
+    print("Resultado válido?", not len(d) == 0)
+    print("Resultado válido?", not len(v) == 0)
+    
+    return t, not len(d) == 0, not len(v) == 0
+>>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
 
 '''
 
