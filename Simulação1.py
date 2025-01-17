@@ -84,7 +84,7 @@ def Pega_min(S, N, d, v):
     return S, d, v
     
 
-def Main(N, n, g, plot = False, int_graph = 1000):
+def Main(N, n, g, plot = False, int_graph = 1000, type = 'path', p = 0.5):
     '''
     N: int | número de neurônios utilizados
     n: int | número do tamanho da matriz
@@ -92,13 +92,15 @@ def Main(N, n, g, plot = False, int_graph = 1000):
     plot: bool | se pretende ver o gráfico da função
     int_graph
     '''
-    S = nx.erdos_renyi_graph(N, 0.5)
+    if type == 'path':
+        S = nx.path_graph(N)
+    elif type == 'ER':
+        S = nx.erdos_renyi_graph(N, p)
     for node in S.nodes():
         S.nodes[node]['value'] = 1
     d = Disparos(N, n)
     v = Vazamentos(g, N, n)
     n_ativos =[sum(nx.get_node_attributes(S, 'value').values())]
-    print(n_ativos)
     x = range(len(n_ativos))
     t = 0
 
@@ -108,7 +110,7 @@ def Main(N, n, g, plot = False, int_graph = 1000):
         S, d, v = Pega_min(S, N, d, v) #Pega o tempo mais recente na matriz
         n_ativos.append(sum(nx.get_node_attributes(S, 'value').values()))
         t += 1
-        
+
         if plot and t%int_graph == 0: # Parte voltada pro gráfico
             plt.clf()
             x = range(len(n_ativos))
@@ -124,8 +126,10 @@ def Main(N, n, g, plot = False, int_graph = 1000):
             plt.subplot(2, 1, 2)
             nx.draw(S, pos = nx.circular_layout(S), node_color= node_colors)
             plt.pause(0.0001)
-    print("Resultado válido?", not len(d) == 0)
-    print("Resultado válido?", not len(v) == 0)
+    #print("Resultado válido?", not len(d) == 0)
+    #print("Resultado válido?", not len(v) == 0)
+
+    plt.ioff()
     
     return t, not len(d) == 0, not len(v) == 0
 
@@ -148,5 +152,3 @@ def amostra ():
     df = pd.DataFrame(lista)
     with pd.ExcelWriter("Simulação1.xlsx") as writer:
         df.to_excel(writer, sheet_name="dados2")
-
-Main(10, 1000, 1, True, 1)

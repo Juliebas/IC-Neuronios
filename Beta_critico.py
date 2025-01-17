@@ -7,11 +7,7 @@ Tn = []
 vald = []
 valv = []
 for i in range(100):
-<<<<<<< HEAD
-    Sim, val1, val2 = Sm.Main(100, 10000, 2.5, False)
-=======
-    Sim, val1, val2 = Sm.Main(100, 10000000, 2, False-------------------------------------------------, 1000)
->>>>>>> bdba497f724b944330de7015bf70bbdca0e3e7d6
+    Sim, val1, val2 = Sm.Main(100, 1000000, 2)
     vald += [val1]
     valv += [val2]
     Tn += [Sim]
@@ -22,7 +18,7 @@ res.cdf.plot(ax)
 m = np.mean(Tn)
 x = np.linspace(stats.expon.ppf(0.01, 0, m), stats.expon.ppf(0.99, 0, m), 100)
 cdf = stats.expon.cdf(x, 0, m)
-graph2 = plt.plot(x, cdf)
+plt.plot(x, cdf)
 print(stats.kstest(Tn, 'expon', args=(0, m)))
 print(vald, "\n", valv)
 print(all(vald))
