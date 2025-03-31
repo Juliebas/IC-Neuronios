@@ -1,12 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 from scipy import stats
-from collections import Counter
 import pandas as pd
 import networkx as nx
+import time
  #Usarei seed 100,200 e 300 nos testes
-
 
 
 def Disparos(N, n):
@@ -16,7 +14,7 @@ def Disparos(N, n):
 
     returna uma lista exponencial
     '''
-    t = np.random.exponential(scale = 1/N, size = n)
+    t = np.random.exponential(scale = 1/N, size = n) #Mudar a array, tem que ser por While, a exponencial é feita a cada passo
     t_cumsum = np.cumsum(t)
 
     return t_cumsum
@@ -29,15 +27,15 @@ def Vazamentos(g, N, n):
 
     returna umas lista exponencial
     '''
-    t = np.random.exponential(scale=g/N, size = n)
+    t = np.random.exponential(scale=g/N, size = n) #Mudar a array, tem que ser por While, a exponencial é feita a cada passo
     t_cumsum= np.cumsum(t)
     
     return t_cumsum
 
 def Passa_vizinhos(S, i):
     '''
-    S: array | array de Status dos neurônios (ativos = 1, inativos = 0)
-    i = indíce de disparo
+    S: grafo | grafo de status dos neurônios (ativos = 1, inativos = 0)
+    i: indíce de disparo
     Tempo: O(1)
     '''
     S.nodes[i]['value'] = 0
@@ -57,10 +55,8 @@ def Zera(S, i):
 
 def Pega_min(S, N, d, v):
     '''
-    S: array | array de Status dos neurônios (ativos = 1, inativos = 0)
+    S: array | grafo de Status dos neurônios (ativos = 1, inativos = 0)
     N: int | número de neurônios
-    ld: int | índice atual utilizado para procurar em d o próximo disparo
-    lv: int | índice atual utilizado para procurar em v o próximo vazamento
     d: np.array | matriz com o tempo dos disparos
     v: np.array | matriz com o tempo dos vazamentos
     
@@ -83,7 +79,6 @@ def Pega_min(S, N, d, v):
     
     return S, d, v
     
-
 def Main(N, n, g, plot = False, int_graph = 1000, type = 'path', p = 0.5):
     '''
     N: int | número de neurônios utilizados
@@ -92,6 +87,7 @@ def Main(N, n, g, plot = False, int_graph = 1000, type = 'path', p = 0.5):
     plot: bool | se pretende ver o gráfico da função
     int_graph
     '''
+    start = time.time()
     if type == 'path':
         S = nx.path_graph(N)
     elif type == 'ER':
@@ -110,6 +106,10 @@ def Main(N, n, g, plot = False, int_graph = 1000, type = 'path', p = 0.5):
         S, d, v = Pega_min(S, N, d, v) #Pega o tempo mais recente na matriz
         n_ativos.append(sum(nx.get_node_attributes(S, 'value').values()))
         t += 1
+        if t == 1000000:
+            end = time.time()
+            print("Tempo desse processo:", end - start)
+
 
         if plot and t%int_graph == 0: # Parte voltada pro gráfico
             plt.clf()
@@ -152,3 +152,5 @@ def amostra ():
     df = pd.DataFrame(lista)
     with pd.ExcelWriter("Simulação1.xlsx") as writer:
         df.to_excel(writer, sheet_name="dados2")
+
+Main(100, 1000000, 3, plot = False, int_graph = 1000, type = 'path', p = 0.5)
