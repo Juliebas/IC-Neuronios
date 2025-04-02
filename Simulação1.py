@@ -153,4 +153,4 @@ def amostra ():
     with pd.ExcelWriter("Simulação1.xlsx") as writer:
         df.to_excel(writer, sheet_name="dados2")
 
-Main(100, 1000000, 3, plot = False, int_graph = 1000, type = 'path', p = 0.5)
+Main(100, 1000000, 2, plot = True, int_graph = 1000, type = 'path', p = 0.5)
