@@ -6,7 +6,7 @@ import networkx as nx
 
 plt.ion()
 
-def Main(S, g, plot = False, t_up_plot = 1000):
+def Main(S, g, plot = False, t_up_plot = 50000):
     '''
     Main simplificada buscando optimização do código
 
@@ -48,7 +48,6 @@ def Main(S, g, plot = False, t_up_plot = 1000):
         '''
         Parte voltada para o gráfico
         '''
-
         if plot and n%t_up_plot == 0:
             plt.clf()
             x = range(len(n_ativos))
@@ -68,5 +67,3 @@ def Main(S, g, plot = False, t_up_plot = 1000):
     plt.ioff()
 
     return t
-
-Main(nx.path_graph(100), 3, plot= True)
