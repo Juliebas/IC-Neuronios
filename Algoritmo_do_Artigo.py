@@ -21,38 +21,48 @@ def Main(N, g, type_graph = 'path', p_ER = 0.5, plot = False, t_up_plot = 1000):
     '''
 
     if type_graph == 'path':
-        S = nx.path_graph(N)
+        S = nx.path_graph(N) #Caso grafo de linha
     elif type_graph == 'ER':
-        S = nx.erdos_renyi_graph(N, p_ER)
+        S = nx.erdos_renyi_graph(N, p_ER) #Caso grafo ER
+
+
+    # Essa parte de cima será mudada futuramente e a Main() só receberá S
+
+
     t = 0
     n = 0
     for i in range(N):
-        S.nodes[i]['value'] = 1
+        S.nodes[i]['value'] = 1  #Todos os neurônios começam ativos
     for i in range(N):
-        d = np.random.exponential(1, size= N)
-        v = np.random.exponential(g, size= N)
-    s = sum(nx.get_node_attributes(S, 'value').values())
+        d = np.random.exponential(1, size= N) #Cria o tempo de disparo aleatorio seguindo uma Exponencial
+        v = np.random.exponential(g, size= N) #Idem com vazamento
+    s = sum(nx.get_node_attributes(S, 'value').values()) #s é a soma de neurônios ativos
     n_ativos =[s]
     ind = 0
     while s != 0:
         ind += 1
-        minv = min(v)
+        minv = min(v) #Pega o menor tempo de vazamentos e disparos
         mind = min(d)
-        if minv < mind:
+        if minv < mind: #Compara eles
             t = minv
             i = np.where(v == t)[0][0]
             S.nodes[i]['value'] = 0
-            v[i] = t + np.random.exponential(g)
+            v[i] = t + np.random.exponential(g) #Caso o vazamento menor o neuronio ganha outro tempo de vazamento
         else:
             t = mind
             i = np.where(d == t)[0][0]
             S.nodes[i]['value'] = 0
-            for vizinhos in S.neighbors(i):
+            for vizinhos in S.neighbors(i): #Caso disparo menor os neuronios vizinhos ativam e o neuronio ganha um novo tempo de disparo enquanto o mesmo zera
                 S.nodes[vizinhos]['value'] = 1
-                d[i] = t + np.random.exponential(1)
+            d[i] = t + np.random.exponential(1)
         s = sum(nx.get_node_attributes(S, 'value').values())
         n_ativos += [s]
-        if plot and n%t_up_plot == 0: # Parte voltada pro gráfico
+
+        '''
+        Parte voltada para o gráfico
+        '''
+
+        if plot and n%t_up_plot == 0:
             plt.clf()
             x = range(len(n_ativos))
             node_colors = ['red' if S.nodes[node]['value'] == 1 else 'blue' for node in S.nodes()]
@@ -65,7 +75,7 @@ def Main(N, g, type_graph = 'path', p_ER = 0.5, plot = False, t_up_plot = 1000):
             plt.ylim(0, N+1)
             plt.subplot(2, 1, 2)
             nx.draw(S, pos = nx.circular_layout(S), node_color= node_colors)
-            plt.pause(0.0001)
+            plt.pause(0.01)
         n += 1
 
     plt.ioff()
