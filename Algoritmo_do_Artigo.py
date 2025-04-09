@@ -54,13 +54,13 @@ def Main(S, g, plot = False, t_up_plot = 50000):
             node_colors = ['red' if S.nodes[node]['value'] == 1 else 'blue' for node in S.nodes()]
             plt.subplot(2, 1, 1)
             plt.plot(x, n_ativos, color = 'g', label = "Soma de Neurônios ativos")
-            plt.plot(x, [np.mean(n_ativos)]*len(n_ativos), color = 'b', label = f"Média: {np.mean(n_ativos)}")
-            plt.plot(x, [np.median(n_ativos)]*len(n_ativos), color = 'r', label = f"Mediana:{np.median(n_ativos)}")
-            plt.plot(x, [stats.mode(n_ativos)[0]]*len(n_ativos), color = 'k', label = f"Moda:{stats.mode(n_ativos)[0]}")
+            #plt.plot(x, [np.mean(n_ativos)]*len(n_ativos), color = 'b', label = f"Média: {np.mean(n_ativos)}")
+            #plt.plot(x, [np.median(n_ativos)]*len(n_ativos), color = 'r', label = f"Mediana:{np.median(n_ativos)}")
+            #plt.plot(x, [stats.mode(n_ativos)[0]]*len(n_ativos), color = 'k', label = f"Moda:{stats.mode(n_ativos)[0]}")
             plt.legend()
             plt.ylim(0, N+1)
             plt.subplot(2, 1, 2)
-            nx.draw(S, pos = nx.circular_layout(S), node_color= node_colors)
+            nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= node_colors, node_size = 100)
             plt.pause(0.01)
         n += 1
 
