@@ -23,4 +23,9 @@ pip install -r requirements.txt
 
 Pesquise git-ignore para tirar o pycache
 
+# pip freeze
+
+```sh
+pip freeze > requirements.txt
+```
 
