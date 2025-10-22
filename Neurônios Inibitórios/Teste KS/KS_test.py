@@ -13,7 +13,8 @@ g = 1.5 #Gama Inicial
 
 d = 10 #Divisão de probabilidades e Gamas
 results = {} #Resultados do teste
-with open('resultados.txt', 'w') as f: #Abre o .txt dos resultados
+with open('resultados.txt', 'a') as f: #Abre o .txt dos resultados
+    f.write('Novo registro: \n')
     T = True 
     for i in range(1, d+1, 1): #Vai repartir o gama e a probabilidade em d partes
         f.write("\n") #Pula linha
@@ -38,6 +39,7 @@ with open('resultados.txt', 'w') as f: #Abre o .txt dos resultados
             f.write(f"{results[(i*g/d, j*p/d)]}")
             print(result.pvalue)
             j -= 1
+            print(f"dicionário: {results}")
 '''
 grid = np.zeros((d, d)) 
 

@@ -74,9 +74,9 @@ def Main(S, g, p, plot = False, t_up_plot = 50000):
             #plt.plot(x, [stats.mode(n_ativos)[0]]*len(n_ativos), color = 'k', label = f"Moda:{stats.mode(n_ativos)[0]}")
             plt.legend()
             plt.ylim(0, N+1)
-            #plt.subplot(2, 1, 2)
-            #nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_s], nodelist = nodes_s, node_shape = "s")
-            #nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_o], nodelist = nodes_o, node_shape = "o")
+            plt.subplot(2, 1, 2)
+            nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_s], nodelist = nodes_s, node_shape = "s")
+            nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_o], nodelist = nodes_o, node_shape = "o")
             plt.pause(0.01)
         n += 1
 
