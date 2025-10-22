@@ -8,28 +8,28 @@ import matplotlib.pyplot as plt
 import time
 
 
-p = 1
-g = 1.5
+p = 1 #Probabilidade inicial
+g = 1.5 #Gama Inicial
 
-d = 10
-results = {}
-with open('resultados.txt', 'w') as f:
-    T = True
-    for i in range(1, d+1, 1):
-        f.write("\n")
+d = 10 #Divisão de probabilidades e Gamas
+results = {} #Resultados do teste
+with open('resultados.txt', 'w') as f: #Abre o .txt dos resultados
+    T = True 
+    for i in range(1, d+1, 1): #Vai repartir o gama e a probabilidade em d partes
+        f.write("\n") #Pula linha
         j = d
         T = True
-        while T and j > 0 :
-            AA = []
-            for k in range (100):
-                AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1/(i*g/d), j*p/d)]
+        while T and j > 0 : #Se T é verdadeiro e d é positivo
+            AA = [] #Lista de amostra
+            for k in range (100): #Repetição da Amostra
+                AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1/(i*g/d), j*p/d)] #Testa uma grid de neurônios inibitórios 
                 print("p: ", j*p/d, "| g: ", i*g/d, "| amostra: ",k, "| t: ", AA[k])
-            print(np.mean(AA))
-            AA = AA/np.mean(AA)
+            print(np.mean(AA)) 
+            AA = AA/np.mean(AA) #Normaliza essa amostra
             print(AA)
 
             #time.sleep(60)
-            result = sc.stats.kstest(AA, sc.stats.expon.cdf)
+            result = sc.stats.kstest(AA, sc.stats.expon.cdf) #Verifica se parece com a Exponencial
             if result.pvalue < 0.05:
                 results[(i*g/d, j*p/d)] = 0
             else:

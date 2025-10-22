@@ -22,7 +22,6 @@ pip install -r requirements.txt
 - create git-ignore
 - comentar Teste_Ks
 - aplicar teste ks na grid, números pequenos, com neurônios inibitórios
-- 
 
 Pesquise git-ignore para tirar o pycache
 
