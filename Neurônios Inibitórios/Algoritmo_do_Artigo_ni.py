@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import pandas as pd
 import networkx as nx
+import random
+
+random.seed(42)
 
 plt.ion()
 
@@ -23,7 +26,7 @@ def Main(S, g, p, plot = False, t_up_plot = 50000):
     N = S.number_of_nodes()
     t = 0
     n = 0
-    val = np.random.choice(list(S.nodes()), int(N*p))
+    val = random.choices(list(S.nodes()), k = int(N*p))
     for i in range(N):
         S.nodes[i]['value'] = 1  #Todos os neurônios começam ativos
         if i in val:             #Tipo do neurônio
@@ -71,16 +74,16 @@ def Main(S, g, p, plot = False, t_up_plot = 50000):
             #plt.plot(x, [stats.mode(n_ativos)[0]]*len(n_ativos), color = 'k', label = f"Moda:{stats.mode(n_ativos)[0]}")
             plt.legend()
             plt.ylim(0, N+1)
-            plt.subplot(2, 1, 2)
-            nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_s], nodelist = nodes_s, node_shape = "s")
-            nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_o], nodelist = nodes_o, node_shape = "o")
+            #plt.subplot(2, 1, 2)
+            #nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_s], nodelist = nodes_s, node_shape = "s")
+            #nx.draw(S, pos = nx.spring_layout(S, seed= 42), node_color= [node_colors[i] for i in nodes_o], nodelist = nodes_o, node_shape = "o")
             plt.pause(0.01)
         n += 1
 
     plt.ioff()
 
-    plt.plot(range(len(n_ativos)), n_ativos, color = 'g', label = "Soma de Neurônios ativos")
-    plt.plot(range(len(n_ativos)), [np.mean(n_ativos)]*len(n_ativos), color = 'b', label = f"Média: {np.mean(n_ativos)}")
-    plt.show()
+    #plt.plot(range(len(n_ativos)), n_ativos, color = 'g', label = "Soma de Neurônios ativos")
+    #plt.plot(range(len(n_ativos)), [np.mean(n_ativos)]*len(n_ativos), color = 'b', label = f"Média: {np.mean(n_ativos)}")
+    #plt.show()
 
     return t

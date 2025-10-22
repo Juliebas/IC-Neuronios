@@ -31,4 +31,4 @@ elif t == 'grid':
     G = nx.convert_node_labels_to_integers(nx.grid_2d_graph(N1, N2), ordering='sorted')
 
 # %%
-AA(G, 1, q, plot=False, t_up_plot=10)
+AA(G, 1, q, plot=True, t_up_plot=1000)
