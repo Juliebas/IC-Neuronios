@@ -20,6 +20,8 @@ pip install -r requirements.txt
 # TO DO
 - activate venv
 - create git-ignore
+- comentar Teste_Ks
+- aplicar teste ks na grid, números pequenos, com neurônios inibitórios
 
 Pesquise git-ignore para tirar o pycache
 
@@ -29,3 +31,15 @@ Pesquise git-ignore para tirar o pycache
 pip freeze > requirements.txt
 ```
 
+# para deletar branchs
+
+```sh
+git branch -D < nome do branch >
+```
+
+# para mudar de branch
+
+```sh
+git checkout < nome da branch >
+
+```
