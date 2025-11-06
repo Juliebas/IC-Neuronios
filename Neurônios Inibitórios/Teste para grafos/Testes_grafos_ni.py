@@ -6,7 +6,7 @@
 # %%
 #Import do código que habilita esses testes
 import sys
-sys.path.insert(1, '/home/julio/Projects/IC-Neuronios/Neurônios Inibitórios/')
+sys.path.insert(1, '/home/julio/Modelos/IC-Neuronios/Neurônios Inibitórios/')
 from Algoritmo_do_Artigo_ni import Main as AA
 import networkx as nx
 import matplotlib.pyplot as plt

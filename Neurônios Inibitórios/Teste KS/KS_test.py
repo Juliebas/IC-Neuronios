@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(1, '/home/julio/Projects/IC-Neuronios/Neurônios Inibitórios/')
+sys.path.insert(1, '/home/julio/Modelos/IC-Neuronios/Neurônios Inibitórios/')
 from Algoritmo_do_Artigo_ni import Main as A
 import scipy as sc
 import networkx as nx
@@ -18,28 +18,24 @@ with open('resultados.txt', 'a') as f: #Abre o .txt dos resultados
     T = True 
     for i in range(1, d+1, 1): #Vai repartir o gama e a probabilidade em d partes
         f.write("\n") #Pula linha
-        j = d
         T = True
-        while T and j > 0 : #Se T é verdadeiro e d é positivo
-            AA = [] #Lista de amostra
-            for k in range (100): #Repetição da Amostra
-                AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1/(i*g/d), j*p/d)] #Testa uma grid de neurônios inibitórios 
-                print("p: ", j*p/d, "| g: ", i*g/d, "| amostra: ",k, "| t: ", AA[k])
-            print(np.mean(AA)) 
-            AA = AA/np.mean(AA) #Normaliza essa amostra
-            print(AA)
-
-            #time.sleep(60)
-            result = sc.stats.kstest(AA, sc.stats.expon.cdf) #Verifica se parece com a Exponencial
-            if result.pvalue < 0.05:
-                results[(i*g/d, j*p/d)] = 0
-            else:
-                results[(i*g/d, j*p/d)] = 1
-                T = False
-            f.write(f"{results[(i*g/d, j*p/d)]}")
-            print(result.pvalue)
-            j -= 1
-            print(f"dicionário: {results}")
+        AA = [] #Lista de amostra
+        for k in range (1000): #Repetição da Amostra
+            AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1, j*p/d)] #Testa uma grid de neurônios inibitórios 
+            print("p: ", j*p/d, "| g: ", 1, "| amostra: ",k, "| t: ", AA[k])
+        print(np.mean(AA))
+        AA = AA/np.mean(AA) #Normaliza essa amostra
+        print(AA)
+        #time.sleep(60)
+        result = sc.stats.kstest(AA, sc.stats.expon.cdf) #Verifica se parece com a Exponencial
+        if result.pvalue < 0.05:
+            results[(i*g/d, p/d)] = 0
+        else:
+            results[(i*g/d, p/d)] = 1
+            T = False
+        f.write(f"{results[(1, j*p/d)]}")
+        print(result.pvalue)
+        print(f"dicionário: {results}")
 '''
 grid = np.zeros((d, d)) 
 
