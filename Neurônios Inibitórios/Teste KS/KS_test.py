@@ -11,31 +11,33 @@ import time
 p = 1 #Probabilidade inicial
 g = 1.5 #Gama Inicial
 
-d = 10 #Divisão de probabilidades e Gamas
+d = 100 #Divisão de probabilidades e Gamas
 results = {} #Resultados do teste
 with open('resultados.txt', 'a') as f: #Abre o .txt dos resultados
     f.write('Novo registro: \n')
     T = True 
-    for i in range(1, d+1, 1): #Vai repartir o gama e a probabilidade em d partes
+    for i in range(d, 1, -1): #Vai repartir o gama e a probabilidade em d partes
         f.write("\n") #Pula linha
-        T = True
+        T = time.time()
         AA = [] #Lista de amostra
-        for k in range (1000): #Repetição da Amostra
-            AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1, j*p/d)] #Testa uma grid de neurônios inibitórios 
-            print("p: ", j*p/d, "| g: ", 1, "| amostra: ",k, "| t: ", AA[k])
+        for k in range (300): #Repetição da Amostra
+            AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1, i*p/d)] #Testa uma grid de neurônios inibitórios 
+            print("p: ", i*p/d, "| g: ", 1, "| amostra: ",k, "| t: ", AA[k])
         print(np.mean(AA))
         AA = AA/np.mean(AA) #Normaliza essa amostra
         print(AA)
         #time.sleep(60)
         result = sc.stats.kstest(AA, sc.stats.expon.cdf) #Verifica se parece com a Exponencial
         if result.pvalue < 0.05:
-            results[(i*g/d, p/d)] = 0
+            results[(1, i*p/d)] = 0
+            f.write(f"g: 1, p: {i*p/d}: 0\n")
         else:
-            results[(i*g/d, p/d)] = 1
-            T = False
-        f.write(f"{results[(1, j*p/d)]}")
+            results[(1, i*p/d)] = 1
+            f.write(f"g: 1, p: {i*p/d}: 1\n")
+        if time.time() - T > 60*60: #Demorou mais de 30minutos para uma amostragem
+            break
         print(result.pvalue)
-        print(f"dicionário: {results}")
+        print(f"dicionário: {results}\n")
 '''
 grid = np.zeros((d, d)) 
 
