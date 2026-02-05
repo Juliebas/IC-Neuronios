@@ -37,7 +37,7 @@ def Main(S, g, p, plot = False, t_up_plot = 50000):
     s = sum(nx.get_node_attributes(S, 'value').values()) #s é a soma de neurônios ativos
     for i in range(N):
         d = np.random.exponential(1/s) #Cria o tempo de disparo aleatorio seguindo uma Exponencial
-        v = np.random.exponential(g/s) #Idem com vazamento
+        v = np.random.exponential(1/s*g) #Idem com vazamento
     n_ativos =[s]
     while s != 0:
         if v < d: #Compara o tempo do vazamento e do disparo

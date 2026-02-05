@@ -8,36 +8,43 @@ import matplotlib.pyplot as plt
 import time
 
 
-p = 1 #Probabilidade inicial
 g = 1.5 #Gama Inicial
+a = 1
+ps = 1
+pi = 0
+prec = 1/100
 
 d = 100 #Divisão de probabilidades e Gamas
 results = {} #Resultados do teste
 with open('resultados.txt', 'a') as f: #Abre o .txt dos resultados
     f.write('Novo registro: \n')
-    T = True 
-    for i in range(d, 1, -1): #Vai repartir o gama e a probabilidade em d partes
+    T = True
+    ps = 1
+    pi = 0
+    while ps - pi > prec: #Vai repartir o gama e a probabilidade em d partes
+        pk = (ps + pi)/2
         f.write("\n") #Pula linha
         T = time.time()
         AA = [] #Lista de amostra
-        for k in range (300): #Repetição da Amostra
-            AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1, i*p/d)] #Testa uma grid de neurônios inibitórios 
-            print("p: ", i*p/d, "| g: ", 1, "| amostra: ",k, "| t: ", AA[k])
-        print(np.mean(AA))
+        for k in range (500): #Repetição da Amostra
+            AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(12, 12), ordering='sorted'), 1, pk)] #Testa uma grid de neurônios inibitórios 
+            print("p: ", pk, "| g: ", 1, "| amostra: ",k, "| t: ", AA[k])
+        #print(np.mean(AA))
         AA = AA/np.mean(AA) #Normaliza essa amostra
-        print(AA)
+        #print(AA)
         #time.sleep(60)
         result = sc.stats.kstest(AA, sc.stats.expon.cdf) #Verifica se parece com a Exponencial
         if result.pvalue < 0.05:
-            results[(1, i*p/d)] = 0
-            f.write(f"g: 1, p: {i*p/d}: 0\n")
+            ps = pk
+            results[(1, pk)] = 0
+            f.write(f"g: 1, p: {pk}: 0")
         else:
-            results[(1, i*p/d)] = 1
-            f.write(f"g: 1, p: {i*p/d}: 1\n")
-        if time.time() - T > 60*60: #Demorou mais de 30minutos para uma amostragem
-            break
+            pi = pk
+            results[(1, pk)] = 1
+            f.write(f"g: 1, p: {pk}: 1")
         print(result.pvalue)
         print(f"dicionário: {results}\n")
+        print("PK>>>>>>>>>>>>>>>", pk)
 '''
 grid = np.zeros((d, d)) 
 
