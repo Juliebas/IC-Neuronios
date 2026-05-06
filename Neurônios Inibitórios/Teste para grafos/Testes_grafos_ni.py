@@ -11,6 +11,7 @@ from Algoritmo_do_Artigo_ni import Main as AA
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 
 
@@ -21,14 +22,16 @@ q = float(input(f"Qual a proporção de inibitórios?: "))
 if t == 'path':
     N = int(input(f"número de neurônios do grafo: "))
     G = nx.path_graph(N)
+    val = random.choices(list(G.nodes()), k = int(N*q))
 elif t == 'erdos':
     N = int(input(f"número de neurônios do grafo: "))
     p = float(input("Qual a probabilidade de conexão?: "))
     G = nx.erdos_renyi_graph(N, p)
+    val = random.choices(list(G.nodes()), k = int(N*q))
 elif t == 'grid':
     N1 = int(input(f"Número de colunas da grid: "))
     N2 = int(input(f"Número de linhas da grid: "))
     G = nx.convert_node_labels_to_integers(nx.grid_2d_graph(N1, N2), ordering='sorted')
-
+    val = random.choices(list(G.nodes()), k = int(N1*N2*q))
 # %%
-AA(G, 3, q, plot=True, t_up_plot=100)
+AA(G, 3, val, plot=True, t_up_plot=100)
