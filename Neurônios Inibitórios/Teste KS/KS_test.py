@@ -1,60 +1,81 @@
 import sys
-sys.path.insert(1, '/home/julio/Projects/IC-Neuronios/Neurônios Inibitórios/')
-from Algoritmo_do_Artigo_ni import Main as A
-import scipy as sc
 import networkx as nx
 import numpy as np
+import scipy.stats as stats
 import matplotlib.pyplot as plt
-import time
+import concurrent.futures
 
+# Importação da sua simulação refatorada
+sys.path.insert(1, '/home/julio/Projects/IC-Neuronios/Neurônios Inibitórios/')
+from Algoritmo_do_Artigo_ni import Main as SimulaRede
 
-p = 1 #Probabilidade inicial
-g = 1.5 #Gama Inicial
+# Fixamos a seed do NumPy para garantir que as uniformes sejam reprodutíveis
+np.random.seed(42) 
 
-d = 10 #Divisão de probabilidades e Gamas
-results = {} #Resultados do teste
-with open('resultados.txt', 'a') as f: #Abre o .txt dos resultados
-    f.write('Novo registro: \n')
-    T = True 
-    for i in range(1, d+1, 1): #Vai repartir o gama e a probabilidade em d partes
-        f.write("\n") #Pula linha
-        j = d
+g_start = 1.0
+g_end = 2.0
+e_step = 0.1
+d_step = 0.01
+
+results = {}
+results[(g_start, 1.0)] = 0
+results[(g_start, 0.99)] = 0
+
+S = nx.convert_node_labels_to_integers(nx.grid_2d_graph(12, 12), ordering='sorted')
+N = S.number_of_nodes()
+
+uniform_vals = np.random.rand(N)
+
+with open('resultados.txt', 'a') as f:
+    f.write('Novo registro:\n')
+    
+    g = g_start
+    while g < g_end:
         T = True
-        while T and j > 0 : #Se T é verdadeiro e d é positivo
-            AA = [] #Lista de amostra
-            for k in range (100): #Repetição da Amostra
-                AA += [A(nx.convert_node_labels_to_integers(nx.grid_2d_graph(10, 10), ordering='sorted'), 1/(i*g/d), j*p/d)] #Testa uma grid de neurônios inibitórios 
-                print("p: ", j*p/d, "| g: ", i*g/d, "| amostra: ",k, "| t: ", AA[k])
-            print(np.mean(AA)) 
-            AA = AA/np.mean(AA) #Normaliza essa amostra
-            print(AA)
-
-            #time.sleep(60)
-            result = sc.stats.kstest(AA, sc.stats.expon.cdf) #Verifica se parece com a Exponencial
+        U = True
+        p = 1.0 - (2 * d_step)
+        
+        while T or U:
+            val = np.where(uniform_vals < p)[0].tolist()
+            
+            f.write("\n")
+            print(f"p: {p:.2f} | g: {g:.2f} | Nós inibitórios (tamanho {len(val)}): {val}")
+            
+            # Executa as 500 simulações em paralelo
+            print(f"Rodando 500 simulações em paralelo...")
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                futures = [executor.submit(SimulaRede, S, g, val, plot=False) for _ in range(500)]
+                
+                AA_list = []
+                for future in concurrent.futures.as_completed(futures):
+                    AA_list.append(future.result())
+                    
+            AA = np.array(AA_list)
+            
+            # Normalização e Teste KS
+            mean_AA = np.mean(AA)
+            AA / mean_AA
+                
+            result = stats.kstest(AA_norm, stats.expon.cdf)
+            p_rounded = round(p, 2)
+            g_rounded = round(g, 2)
+            
             if result.pvalue < 0.05:
-                results[(i*g/d, j*p/d)] = 0
-            else:
-                results[(i*g/d, j*p/d)] = 1
+                results[(g_rounded, p_rounded)] = 0
+                f.write(f"g: {g_rounded} p: {p_rounded}: 0")
+            elif T and result.pvalue >= 0.05:
+                results[(g_rounded, p_rounded)] = 1
+                f.write(f"g: {g_rounded} p: {p_rounded}: 1")
                 T = False
-            f.write(f"{results[(i*g/d, j*p/d)]}")
-            print(result.pvalue)
-            j -= 1
-            print(f"dicionário: {results}")
-'''
-grid = np.zeros((d, d)) 
-
-for (j_val, i_val), value in results.items():
-    i_idx = int(i_val * d / p)  # converte p/d para índice
-    j_idx = int(j_val * d / g)  # converte g/d para índice
-    grid[i_idx, j_idx] = value
-
-plt.imshow(grid, cmap='Greys', origin='lower')
-plt.title("Resultados do KS Test")
-plt.xlabel("Proporção de Inibitórios (j*g/d)")
-plt.ylabel("Probabilidade de Disparo (i*p/d)")
-plt.colorbar(label="KS Aceita (1) ou Rejeita (0)")
-plt.xticks(ticks=range(d), labels=[f"{j*g/d:.2f}" for j in range(d)])
-plt.yticks(ticks=range(d), labels=[f"{i*p/d:.2f}" for i in range(d)])
-plt.grid(False)
-plt.show()
-'''
+            else:
+                results[(g_rounded, p_rounded)] = 1
+                f.write(f"g: {g_rounded} p: {p_rounded}: 1")
+                U = False
+                
+            print(f"p-value: {result.pvalue}")
+            print(f"dicionário: {results}\n")
+            print(f"P>>>>>>>>>>>>>>> {p_rounded}")
+            
+            p -= d_step
+            
+        g += e_step
