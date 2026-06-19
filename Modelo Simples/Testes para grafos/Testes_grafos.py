@@ -6,7 +6,7 @@
 # %%
 #Import do código que habilita esses testes
 import sys
-sys.path.insert(1, '/home/julio/Projects/IC-Neuronios')
+sys.path.insert(1, '/home/julio/Modelos/IC-Neuronios/Modelo Simples')
 from Algoritmo_do_Artigo import Main as AA
 import networkx as nx
 import matplotlib.pyplot as plt

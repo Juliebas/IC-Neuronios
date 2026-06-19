@@ -6,7 +6,7 @@
 # %%
 #Import do código que habilita esses testes
 import sys
-sys.path.insert(1, '/home/julio/Projects/IC-Neuronios/Neurônios Inibitórios/')
+sys.path.insert(1, '/home/julio/Modelos/IC-Neuronios/Neurônios Inibitórios/')
 from Algoritmo_do_Artigo_ni import Main as AA
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -31,4 +31,8 @@ elif t == 'grid':
     G = nx.convert_node_labels_to_integers(nx.grid_2d_graph(N1, N2), ordering='sorted')
 
 # %%
+<<<<<<< HEAD
 AA(G, 2.5, q, plot=True, t_up_plot=1)
+=======
+AA(G, 3, q, plot=True, t_up_plot=100)
+>>>>>>> origin/Passo_Ajustável
